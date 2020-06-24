@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<style>
+    .bg-pink {
+        border: 2px solid black;
+        background: rebeccapurple;
+        color: white;
+    }
+    .bg-brown{
+        border: 2px solid black;
+        background: brown;
+        color: white;
+    }
+    .bg-green{
+        border: 2px solid black;
+        background: green;
+        color: white;
+    }
+    .bg-gray{
+        border: 2px solid black;
+        background: gray;
+        color: white;
+    }
+    .bg-red{
+        border: 2px solid black;
+        background: maroon;
+        color: white;
+    }
+    .bg-purple{
+        border: 2px solid black;
+        background: purple;
+        color: white;
+    }
+    .bg-yellow{
+        border: 1px solid black;
+        background: olive;
+        color: white;
+    }
+    .bg-blue{
+        border: 2px solid black;
+        background: blue;
+        color: white;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1 class="text-center my-5">Coronavirus COVID-19</h1>
+
+
+
+
+        <select id="select" style="display: flex; margin: auto">
+            <option selected disabled>
+                Seleccioná un pais
+            </option>
+        </select>
+
+
+
+
+        <div class="wrapper">
+
+        </div>
+
+        <script>
+             const selectElem = document.querySelector('#select')
+
+
+            function makeNewOptionBox(data){
+                const title = data.title;
+                if(typeof title != "undefined"){
+                    const optionBox = document.createElement('option')
+                    optionBox.innerHTML = title
+                    selectElem.appendChild(optionBox)
+                }
+            }
+
+
+           
+
+
+            function manipulateData(data){
+                for(eachItem in data.countryitems[0]){
+                    const singleData = data.countryitems[0][eachItem]
+
+                    makeNewOptionBox(singleData)
+
+                    selectElem.addEventListener('change', function(e){
+                        if(e.target.value == singleData.title){
+                           let TotalCases = singleData.total_cases
+                           let totalRecovered = singleData.total_recovered
+                           let totalUnresolved = singleData.total_unresolved
+                           let totalDeaths = singleData.total_deaths
+                           let totalNew_cases_today = singleData.total_new_cases_today
+                           let totalNew_deaths_today = singleData.total_new_deaths_today
+                           let totalActive_cases = singleData.total_active_cases
+                           let totalSerious_cases = singleData.total_serious_cases
+
+                           let cardTemplate = `
+                           <div class="row justify-content-center">
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-brown">
+                                <h2 class="mb-2">Casos</h2>
+                                <p>${TotalCases}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-green">
+                                <h2 class="mb-2">Recuperados</h2>
+                                <p>${totalRecovered}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-gray">
+                                <h2 class="mb-2">No Resueltos</h2>
+                                <p>${totalUnresolved}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-red">
+                                <h2 class="mb-2">Muertes</h2>
+                                <p>${totalDeaths}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-purple">
+                                <h2 class="mb-2">Nuevos casos hoy</h2>
+                                <p>${totalNew_cases_today}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-yellow">
+                                <h2 class="mb-2">Nuevas muertes hoy</h2>
+                                <p>${totalNew_deaths_today}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-blue">
+                                <h2 class="mb-2">Casos activos</h2>
+                                <p>${totalActive_cases}</p>
+                            </div>
+                            <div class="card pl-3 pr-5 py-2 mx-2 my-2 col-md-3 bg-pink">
+                                <h2 class="mb-2">Casos graves</h2>
+                                <p>${totalSerious_cases}</p>
+                            </div>
+
+                           `;
+
+                           const wrapper = document.querySelector('.wrapper');
+                           wrapper.innerHTML = cardTemplate;
+
+                        }
+                    })
+                    
+                }
+            }
+
+
+
+
+            const fetchedData = fetch('https://api.thevirustracker.com/free-api?countryTotals=ALL')
+            .then(response => {
+                return response.json()
+                })
+            .then(data => {
+                manipulateData(data);
+            })
+
+        </script>
+    </div>
+</body>
+</html>
